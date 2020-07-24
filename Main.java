@@ -36,7 +36,7 @@ public class Main{
             }else if(input.equals("file")){
                 return getSystemFromFile(in);
             }
-            System.out.println("That wasn't quite right. Let's try again.");
+            System.out.println("That wasn't quite right. Let's try again.\n");
         }while(true);
     }
 
@@ -72,11 +72,12 @@ public class Main{
                 System.out.println("Enter the matrix size that you want to use as an integer");
 
                 int n = in.nextInt();
+                in.nextLine();
 
                 return LinearSystem.randomSystem(n);
 
             }catch(Exception e){
-                System.out.println("That wasn't right. Try again.");
+                System.out.println("That wasn't right. Try again.\n");
             }
 
         }while(true);
@@ -126,7 +127,7 @@ public class Main{
                 return getGuessX(in, n);
             }
 
-            System.out.println("That wasn't right. Try again.");
+            System.out.println("That wasn't right. Try again.\n");
 
         }while(true);
     }
@@ -138,10 +139,12 @@ public class Main{
                 System.out.print("Enter a minimum value: ");
 
                 double min = in.nextDouble();
+                in.nextLine();
 
                 System.out.println("enter a maximum value: ");
 
                 double max = in.nextDouble();
+                in.nextLine();
 
                 double[] x = new double[n];
 
@@ -152,7 +155,7 @@ public class Main{
                 return x;
 
             }catch(Exception e){
-                System.out.println("That wasn't right. Let's try again.");
+                System.out.println("That wasn't right. Let's try again.\n");
             }
         }while(true);
     }
@@ -171,7 +174,7 @@ public class Main{
                 try{
                     x[i] = Double.parseDouble(input[i]);
                 }catch(Exception e){
-                    System.out.println("That wasn't right, let's try again.");
+                    System.out.println("That wasn't right, let's try again.\n");
                     break;
                 }
             }
@@ -206,7 +209,7 @@ public class Main{
                 return solveWithGauss(in, system);
             }
 
-            System.out.println("That wasn't right. Let's try again.");
+            System.out.println("That wasn't right. Let's try again.\n");
         }while(true);
 
     }
@@ -239,14 +242,15 @@ public class Main{
 
             try{
 
-                System.out.println("What is the maximum error? Enter a number as a percentage.");
+                System.out.println("What is the maximum error?");
 
                 double error = in.nextDouble();
+                in.nextLine();
 
                 return error;
             
             }catch(Exception e){
-                System.out.println("That wasn't right. Try again.");
+                System.out.println("That wasn't right. Try again.\n");
             }
 
         }while(true);
