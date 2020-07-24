@@ -45,15 +45,22 @@ public class LinearSystem{
 
     }
 
-    public static LinearSystem randomSystem(int n, int min, int max){
+    public static LinearSystem randomSystem(int n){
         double[][] a = new double[n][n];
         double[] b = new double[n];
 
+        double min = -5;
+        double max = 10;
+
         for(int i = 0; i < a.length; i++){
             for(int j = 0; j < a[i].length; j++){
-                a[i][j] = Math.random();
+                a[i][j] = (Math.random() * ((max-min)+1) + min);
             }
+
+            b[i] = (Math.random() * ((max-min)+1) + min);
         }
+
+        return new LinearSystem(a, b);
 
     }
 

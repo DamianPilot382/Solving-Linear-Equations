@@ -1,13 +1,13 @@
 import java.util.Arrays;
 public class GaussSeidel {
-
+    
     public static double[] solve(LinearSystem system, double[] x, double error){
+
         double[][] a = system.coefficients;
         double[] b = system.b;
 
-        double kmax = 100;
+        double kmax = 50;
         double delta = Math.pow(10, -10);
-        double epsilon = .5 * Math.pow(10, -4);
 
         int i = 0;
         int j = 0;
@@ -21,6 +21,7 @@ public class GaussSeidel {
 
         for(k = 0; k < kmax; k++){
             y = Arrays.copyOf(x, x.length);
+
             for(i = 0; i < n; i++){
                 sum = b[i];
                 diag = a[i][i];
@@ -30,26 +31,34 @@ public class GaussSeidel {
                     return x;
                 }
 
-                for(j = 0; j < i-1; j++){
+                for(j = 0; j < i; j++){
                     sum = sum - a[i][j]*x[j];
                 }
-
                 for(j = i + 1; j < n; j++){
                     sum = sum - a[i][j]*x[j];
                 }
                 x[i] = sum/diag;
             }
-        }
 
-        System.out.println(k);
+            if(vectorMagnitude(x) - vectorMagnitude(y) < error)
+                return x;
 
-        for(int t = 0; t < n; t++){
-            System.out.println(x[t]);
         }
 
         return x;
 
     }
     
+    public static double vectorMagnitude(double[] x){
+
+        double sum = 0;
+
+        for(double next : x){
+            sum += next * next;
+        }
+
+        return Math.sqrt(sum);
+
+    }
 
 }

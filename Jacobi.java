@@ -7,9 +7,8 @@ public class Jacobi {
         double[][] a = system.coefficients;
         double[] b = system.b;
 
-        double kmax = 100;
+        double kmax = 50;
         double delta = Math.pow(10, -10);
-        double epsilon = .5 * Math.pow(10, -4);
 
         int i = 0;
         int j = 0;
@@ -23,6 +22,7 @@ public class Jacobi {
 
         for(k = 0; k < kmax; k++){
             y = Arrays.copyOf(x, x.length);
+
             for(i = 0; i < n; i++){
                 sum = b[i];
                 diag = a[i][i];
@@ -39,13 +39,11 @@ public class Jacobi {
                 }
                 x[i] = sum/diag;
             }
+
+            if(vectorMagnitude(x) - vectorMagnitude(y) < error)
+                return x;
+
         }
-
-        //System.out.println(k);
-
-        // for(int t = 0; t < n; t++){
-        //     System.out.println(x[t]);
-        // }
 
         return x;
 

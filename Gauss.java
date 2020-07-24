@@ -4,12 +4,12 @@ public class Gauss {
         double[][] a = system.coefficients;
         double[] b = system.b;
         int n = system.n;
-        int[] l = gauss(n, a);
-        b(n, a, b, l);
-        return solver(n, a, b, l);
+        int[] l = getIndexArray(n, a);
+        forwardElimination(n, a, b, l);
+        return backSubstitution(n, a, b, l);
     }
 
-    public static int[] gauss(int n, double[][] a) {
+    public static int[] getIndexArray(int n, double[][] a) {
 
         int[] l = new int[n];
 
@@ -60,7 +60,7 @@ public class Gauss {
 
     }
 
-    public static void b(int n, double[][] a, double[]b, int[] l){
+    public static void forwardElimination(int n, double[][] a, double[]b, int[] l){
         for(int k = 0; k < n-1; k++){
             for(int i = k+1; i < n; i++){
                 b[l[i]] = b[l[i]] - a[l[i]][k]*b[l[k]];
@@ -68,7 +68,7 @@ public class Gauss {
         }
     }
 
-    public static double[] solver(int n, double[][] a, double[] b, int[] l){
+    public static double[] backSubstitution(int n, double[][] a, double[] b, int[] l){
         int i = 0;
         int k = 0;
         

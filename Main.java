@@ -21,15 +21,18 @@ public class Main{
     public static LinearSystem getSystem(Scanner in){
 
         do{
-            System.out.println("Would you like to enter your own input or use a file?");
+            System.out.println("Would you like to enter your own input, random or use a file?");
             System.out.println("Type 'input' to type a matrix.");
+            System.out.println("Type 'random' to get a random matrix.");
             System.out.println("Type 'file' to use a file.");
             System.out.print("Your choice: ");
 
-            String input = in.nextLine();
+            String input = in.nextLine().toLowerCase();
 
             if(input.equals("input")){
                 return getSystemFromInput(in);
+            }else if(input.equals("random")){
+                return getRandomMatrix(in);
             }else if(input.equals("file")){
                 return getSystemFromFile(in);
             }
@@ -61,6 +64,22 @@ public class Main{
         System.out.println(system);
 
         return system;
+    }
+
+    public static LinearSystem getRandomMatrix(Scanner in){
+        do{
+            try{
+                System.out.println("Enter the matrix size that you want to use as an integer");
+
+                int n = in.nextInt();
+
+                return LinearSystem.randomSystem(n);
+
+            }catch(Exception e){
+                System.out.println("That wasn't right. Try again.");
+            }
+
+        }while(true);
     }
 
     public static LinearSystem getSystemFromFile(Scanner in){
@@ -219,7 +238,7 @@ public class Main{
         do{
 
             try{
-                
+
                 System.out.println("What is the maximum error? Enter a number as a percentage.");
 
                 double error = in.nextDouble();
