@@ -1,8 +1,9 @@
 import java.util.Arrays;
 public class GaussSeidel {
-        
-    
-    public static void solve(double[][] a, double[] b, double[] x){
+
+    public static double[] solve(LinearSystem system, double[] x, double error){
+        double[][] a = system.coefficients;
+        double[] b = system.b;
 
         double kmax = 100;
         double delta = Math.pow(10, -10);
@@ -26,7 +27,7 @@ public class GaussSeidel {
 
                 if(Math.abs(diag) < delta){
                     System.out.println("Diagonal element too small");
-                    return;
+                    return x;
                 }
 
                 for(j = 0; j < i-1; j++){
@@ -45,6 +46,8 @@ public class GaussSeidel {
         for(int t = 0; t < n; t++){
             System.out.println(x[t]);
         }
+
+        return x;
 
     }
     

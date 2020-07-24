@@ -1,9 +1,12 @@
 public class Gauss {
 
-    public static void solve(int n, double[][] a, double[]b){
+    public static double[] solve(LinearSystem system){
+        double[][] a = system.coefficients;
+        double[] b = system.b;
+        int n = system.n;
         int[] l = gauss(n, a);
         b(n, a, b, l);
-        solver(n, a, b, l);
+        return solver(n, a, b, l);
     }
 
     public static int[] gauss(int n, double[][] a) {
@@ -65,7 +68,7 @@ public class Gauss {
         }
     }
 
-    public static void solver(int n, double[][] a, double[] b, int[] l){
+    public static double[] solver(int n, double[][] a, double[] b, int[] l){
         int i = 0;
         int k = 0;
         
@@ -88,6 +91,8 @@ public class Gauss {
             }
             x[i] = sum/a[l[i]][i];
         }
+
+        return x;
 
     }
 

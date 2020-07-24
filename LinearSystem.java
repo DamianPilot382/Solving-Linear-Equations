@@ -8,10 +8,12 @@ public class LinearSystem{
 
     protected double[][] coefficients;
     protected double[] b;
+    protected int n;
 
     public LinearSystem(double[][] coefficients, double[] b){
         this.coefficients = coefficients;
         this.b = b;
+        this.n = b.length;
     }
 
     public static LinearSystem createMatrix(String input) throws InputMismatchException {
@@ -40,6 +42,18 @@ public class LinearSystem{
     public static LinearSystem createMatrixFromFile(String fileName) throws IOException, InputMismatchException {
         String input = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         return createMatrix(input);
+
+    }
+
+    public static LinearSystem randomSystem(int n, int min, int max){
+        double[][] a = new double[n][n];
+        double[] b = new double[n];
+
+        for(int i = 0; i < a.length; i++){
+            for(int j = 0; j < a[i].length; j++){
+                a[i][j] = Math.random();
+            }
+        }
 
     }
 

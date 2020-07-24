@@ -9,16 +9,12 @@ public class Main{
 
         LinearSystem system = getSystem(in);
 
-        // LinearSystem system = LinearSystem.createMatrixFromFile("testMatrix.txt");
+        double[] x = chooseSolveMethod(in, system);
 
-        // Gauss.solve(3, system.coefficients, system.b);
-        // GaussSeidel.solve(system.coefficients, system.b, new double[]{0, 0, 0});
-
-        // System.out.println(system);
-
-
-
-
+        System.out.println("\n\nThe Solution is:");
+        for(double i : x){
+            System.out.println(i + " ");
+        }
 
     }
 
@@ -90,6 +86,58 @@ public class Main{
 
     }
 
+    public static double[] getInitialX(Scanner in, int n){
+
+        do{
+            System.out.println("What would you like to do for the starting value of x?");
+            System.out.println("Type '0' to start with zeroes.");
+            System.out.println("Type 'random' to start with random values.");
+            System.out.println("Type 'input' to provide the starting values.");
+
+            String choice = in.nextLine().toLowerCase();
+
+            if(choice.equals("0")){
+                System.out.println("Starting with initial guess at 0.");
+                return new double[n];
+            }else if(choice.equals("random")){
+                System.out.println("Starting with random initial guess.");
+                return getRandomGuessX(in, n);
+            }else if(choice.equals("input")){
+                System.out.println("Starting with user guess.");
+                return getGuessX(in, n);
+            }
+
+            System.out.println("That wasn't right. Try again.");
+
+        }while(true);
+    }
+
+    public static double[] getRandomGuessX(Scanner in, int n){
+
+        do{
+            try{
+                System.out.print("Enter a minimum value: ");
+
+                double min = in.nextDouble();
+
+                System.out.println("enter a maximum value: ");
+
+                double max = in.nextDouble();
+
+                double[] x = new double[n];
+
+                for(int i = 0; i < x.length; i++){
+                    x[i] = (Math.random() * ((max-min)+1) + min);
+                }
+
+                return x;
+
+            }catch(Exception e){
+                System.out.println("That wasn't right. Let's try again.");
+            }
+        }while(true);
+    }
+
     public static double[] getGuessX(Scanner in, int n){
         double[] x = new double[n];
         
@@ -117,7 +165,73 @@ public class Main{
 
     }
 
-    public static double get
+    public static double[] chooseSolveMethod(Scanner in, LinearSystem system){
+
+        do{
+            System.out.println("What method would you like to use?");
+            System.out.println("Type 'pivoting' for scaled partial pivoting for Gaussian elimination method.");
+            System.out.println("Type 'jacobi' for Jacobi iterative method.");
+            System.out.println("Type 'gauss' for the Gauss-Seidel method.");
+            System.out.print("Your choice: ");
+
+            String choice = in.nextLine().toLowerCase();
+
+            if(choice.equals("pivoting")){
+                System.out.println("Solving with Scaled Partial Pivoting method for Gaussian Elimination.");
+                return solveWithPivoting(system);
+            }else if(choice.equals("jacobi")){
+                System.out.println("Solving with Jacobi Iterative Method.");
+                return solveWithJacobi(in, system);
+            }else if(choice.equals("gauss")){
+                System.out.println("Solving with Gauss-Seidl Method.");
+                return solveWithGauss(in, system);
+            }
+
+            System.out.println("That wasn't right. Let's try again.");
+        }while(true);
+
+    }
+
+    public static double[] solveWithPivoting(LinearSystem system){
+        return Gauss.solve(system);
+    }
+
+    public static double[] solveWithJacobi(Scanner in, LinearSystem system){
+        double error = getError(in);
+
+        double[] x = getInitialX(in, system.n);
+
+        return Jacobi.solve(system, x, error);
+
+    }
+
+    public static double[] solveWithGauss(Scanner in, LinearSystem system){
+
+        double error = getError(in);
+
+        double[] x = getInitialX(in, system.n);
+
+        return GaussSeidel.solve(system, x, error);
+
+    }
+
+    public static double getError(Scanner in){
+        do{
+
+            try{
+                
+                System.out.println("What is the maximum error? Enter a number as a percentage.");
+
+                double error = in.nextDouble();
+
+                return error;
+            
+            }catch(Exception e){
+                System.out.println("That wasn't right. Try again.");
+            }
+
+        }while(true);
+    }
 
 
 }
