@@ -2,14 +2,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main{
+
+    private static Scanner scanner = new Scanner(System.in);
     
     public static void main(String[] args) throws IOException{
 
-        Scanner in = new Scanner(System.in);
+        LinearSystem system = getSystem();
 
-        LinearSystem system = getSystem(in);
-
-        double[] x = chooseSolveMethod(in, system);
+        double[] x = chooseSolveMethod(system);
 
         System.out.println("\n\nThe Solution is:");
         for(double i : x){
@@ -18,7 +18,7 @@ public class Main{
 
     }
 
-    public static LinearSystem getSystem(Scanner in){
+    public static LinearSystem getSystem(){
 
         do{
             System.out.println("Would you like to enter your own input, random or use a file?");
@@ -27,35 +27,43 @@ public class Main{
             System.out.println("Type 'file' to use a file.");
             System.out.print("Your choice: ");
 
-            String input = in.nextLine().toLowerCase();
+            String input = scanner.nextLine().toLowerCase();
 
             if(input.equals("input")){
-                return getSystemFromInput(in);
+                return getSystemFromInput();
             }else if(input.equals("random")){
-                return getRandomMatrix(in);
+                return getRandomMatrix();
             }else if(input.equals("file")){
-                return getSystemFromFile(in);
+                return getSystemFromFile();
             }
             System.out.println("That wasn't quite right. Let's try again.\n");
         }while(true);
     }
 
-    public static LinearSystem getSystemFromInput(Scanner in){
+    public static LinearSystem getSystemFromInput(){
         System.out.print("Enter the number of equations/variables: ");
-        int n = in.nextInt();
-        in.nextLine();
+        int n = scanner.nextInt();
+        scanner.nextLine();
 
         double[][] coefficients = new double[n][n];
         double[] b = new double[n];
 
         for(int i = 0; i < n; i++){
             System.out.println("Please enter equation #"+(i+1)+", separating each term with a space.");
-            String[] equation = in.nextLine().split("\\s");
+            try{
+                String[] equation = scanner.nextLine().split("\\s");
 
-            for(int j = 0; j < equation.length-1; j++){
-                coefficients[i][j] = Double.parseDouble(equation[j]);
+                if(equation.length != n+1)
+                    throw new Exception();
+
+                for(int j = 0; j < equation.length-1; j++){
+                    coefficients[i][j] = Double.parseDouble(equation[j]);
+                }
+                b[i] = Double.parseDouble(equation[equation.length - 1]);
+            }catch(Exception e){
+                System.out.println("That wasn't recognized. Try again.");
+                i--;
             }
-            b[i] = Double.parseDouble(equation[equation.length - 1]);
         }
 
         LinearSystem system = new LinearSystem(coefficients, b);
@@ -66,15 +74,20 @@ public class Main{
         return system;
     }
 
-    public static LinearSystem getRandomMatrix(Scanner in){
+    public static LinearSystem getRandomMatrix(){
         do{
             try{
                 System.out.println("Enter the matrix size that you want to use as an integer");
 
-                int n = in.nextInt();
-                in.nextLine();
+                int n = scanner.nextInt();
+                scanner.nextLine();
 
-                return LinearSystem.randomSystem(n);
+                LinearSystem system = LinearSystem.randomSystem(n);
+
+                System.out.println("The Linear System is:");
+                System.out.println(system);
+
+                return system;
 
             }catch(Exception e){
                 System.out.println("That wasn't right. Try again.\n");
@@ -83,12 +96,12 @@ public class Main{
         }while(true);
     }
 
-    public static LinearSystem getSystemFromFile(Scanner in){
+    public static LinearSystem getSystemFromFile(){
         do{
             System.out.println("What is the name of the file you want to use? Don't forget to type the file extension!");
             System.out.print("Your file name: ");
 
-            String fileName = in.nextLine();
+            String fileName = scanner.nextLine();
 
             System.out.println("Opening " + fileName);
 
@@ -99,14 +112,14 @@ public class Main{
 
                 return system;
 
-            }catch(IOException e){
-                System.out.println("That file wasn't found. Make sure the file is in the same directory as the application and you spelled it corectly.");
+            }catch(Exception e){
+                System.out.println("That file wasn't found or is in the wrong format. Make sure the file is in the same directory as the application and you spelled it corectly.");
             }
         }while(true);
 
     }
 
-    public static double[] getInitialX(Scanner in, int n){
+    public static double[] getInitialX(int n){
 
         do{
             System.out.println("What would you like to do for the starting value of x?");
@@ -114,17 +127,17 @@ public class Main{
             System.out.println("Type 'random' to start with random values.");
             System.out.println("Type 'input' to provide the starting values.");
 
-            String choice = in.nextLine().toLowerCase();
+            String choice = scanner.nextLine().toLowerCase();
 
             if(choice.equals("0")){
                 System.out.println("Starting with initial guess at 0.");
                 return new double[n];
             }else if(choice.equals("random")){
                 System.out.println("Starting with random initial guess.");
-                return getRandomGuessX(in, n);
+                return getRandomGuessX(n);
             }else if(choice.equals("input")){
                 System.out.println("Starting with user guess.");
-                return getGuessX(in, n);
+                return getGuessX(n);
             }
 
             System.out.println("That wasn't right. Try again.\n");
@@ -132,19 +145,19 @@ public class Main{
         }while(true);
     }
 
-    public static double[] getRandomGuessX(Scanner in, int n){
+    public static double[] getRandomGuessX(int n){
 
         do{
             try{
                 System.out.print("Enter a minimum value: ");
 
-                double min = in.nextDouble();
-                in.nextLine();
+                double min = scanner.nextDouble();
+                scanner.nextLine();
 
-                System.out.println("enter a maximum value: ");
+                System.out.print("enter a maximum value: ");
 
-                double max = in.nextDouble();
-                in.nextLine();
+                double max = scanner.nextDouble();
+                scanner.nextLine();
 
                 double[] x = new double[n];
 
@@ -160,14 +173,14 @@ public class Main{
         }while(true);
     }
 
-    public static double[] getGuessX(Scanner in, int n){
+    public static double[] getGuessX(int n){
         double[] x = new double[n];
         
         do{
             
             System.out.println("Enter the initial guess matrix with size " + n + ", separating each term with a space.");
 
-            String[] input = in.nextLine().split("\\s");
+            String[] input = scanner.nextLine().split("\\s");
 
             int i = 0;
             for( ; i < input.length; i++){
@@ -187,7 +200,7 @@ public class Main{
 
     }
 
-    public static double[] chooseSolveMethod(Scanner in, LinearSystem system){
+    public static double[] chooseSolveMethod(LinearSystem system){
 
         do{
             System.out.println("What method would you like to use?");
@@ -196,17 +209,17 @@ public class Main{
             System.out.println("Type 'gauss' for the Gauss-Seidel method.");
             System.out.print("Your choice: ");
 
-            String choice = in.nextLine().toLowerCase();
+            String choice = scanner.nextLine().toLowerCase();
 
             if(choice.equals("pivoting")){
                 System.out.println("Solving with Scaled Partial Pivoting method for Gaussian Elimination.");
                 return solveWithPivoting(system);
             }else if(choice.equals("jacobi")){
                 System.out.println("Solving with Jacobi Iterative Method.");
-                return solveWithJacobi(in, system);
+                return solveWithJacobi(system);
             }else if(choice.equals("gauss")){
                 System.out.println("Solving with Gauss-Seidl Method.");
-                return solveWithGauss(in, system);
+                return solveWithGauss(system);
             }
 
             System.out.println("That wasn't right. Let's try again.\n");
@@ -218,34 +231,34 @@ public class Main{
         return Gauss.solve(system);
     }
 
-    public static double[] solveWithJacobi(Scanner in, LinearSystem system){
-        double error = getError(in);
+    public static double[] solveWithJacobi(LinearSystem system){
+        double error = getError();
 
-        double[] x = getInitialX(in, system.n);
+        double[] x = getInitialX(system.n);
 
         return Jacobi.solve(system, x, error);
 
     }
 
-    public static double[] solveWithGauss(Scanner in, LinearSystem system){
+    public static double[] solveWithGauss(LinearSystem system){
 
-        double error = getError(in);
+        double error = getError();
 
-        double[] x = getInitialX(in, system.n);
+        double[] x = getInitialX(system.n);
 
         return GaussSeidel.solve(system, x, error);
 
     }
 
-    public static double getError(Scanner in){
+    public static double getError(){
         do{
 
             try{
 
                 System.out.println("What is the maximum error?");
 
-                double error = in.nextDouble();
-                in.nextLine();
+                double error = scanner.nextDouble();
+                scanner.nextLine();
 
                 return error;
             

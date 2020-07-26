@@ -43,6 +43,11 @@ public class GaussSeidel {
             if(vectorMagnitude(x) - vectorMagnitude(y) < error)
                 return x;
 
+            for(double next : x){
+                System.out.print(next + " ");
+            }
+            System.out.println();
+
         }
 
         return x;

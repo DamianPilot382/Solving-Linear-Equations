@@ -38,6 +38,11 @@ public class Jacobi {
                     }
                 }
                 x[i] = sum/diag;
+
+                for(double next : x){
+                    System.out.print(next + " ");
+                }
+                System.out.println();
             }
 
             if(vectorMagnitude(x) - vectorMagnitude(y) < error)

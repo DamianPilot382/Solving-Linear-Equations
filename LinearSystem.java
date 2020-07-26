@@ -18,7 +18,7 @@ public class LinearSystem{
 
     public static LinearSystem createMatrix(String input) throws InputMismatchException {
 
-        String[] system = input.split("\\n\\s{1,}");
+        String[] system = input.split("\\n\\s{0,}");
         int varCount = system[0].split("\\s").length-1;
 
         double[][] coefficients = new double[varCount][varCount];
